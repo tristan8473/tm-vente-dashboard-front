@@ -954,6 +954,39 @@ document.getElementById('salonModal').addEventListener('click', e => { if(e.targ
 document.getElementById('visitorModal').addEventListener('click', e => { if(e.target.id==='visitorModal') closeVisitorEditor(); });
 document.addEventListener('keydown', e => { if(e.key==='Escape'){ closeSalonEditor(); closeVisitorEditor(); } if(e.key.toLowerCase()==='n' && !e.metaKey && !e.ctrlKey && document.activeElement.tagName!=='INPUT' && document.activeElement.tagName!=='TEXTAREA') openSalonEditor(); });
 
+<script>
+const API_BASE_URL = "https://tm-vente-backend-railway-production.up.railway.app";
+
+async function chargerSalons() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/salons`);
+    if (!response.ok) throw new Error("Erreur API salons");
+    const salons = await response.json();
+    console.log("Salons depuis backend:", salons);
+
+    // Exemple ultra simple : afficher les noms dans un <div id="salonsList">
+    const container = document.getElementById("salonsList");
+    if (!container) return;
+
+    container.innerHTML = "";
+    salons.forEach(salon => {
+      const item = document.createElement("div");
+      item.textContent = `${salon.nom} - ${salon.ville} - CA: ${salon.caTotal} €`;
+      container.appendChild(item);
+    });
+  } catch (err) {
+    console.error(err);
+    alert("Impossible de charger les salons");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", chargerSalons);
+</script>
+
+
+<div id="salonsList"></div>
+
+
 renderAll();
 </script>
 </body>
